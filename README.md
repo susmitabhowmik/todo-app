@@ -1,4 +1,4 @@
-# TodoApp
+# Todo App
 
 This app uses Laravel along with Vue.js to implement a simple TODO application with CRUD functionality as well as authentication.
 
