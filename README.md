@@ -6,6 +6,5 @@ This app uses Laravel along with Vue.js to implement a simple TODO application w
 
 -   Clone this repository
 -   Run `npm install --legacy-peer-deps`
--   Run `php artisan serve` to start the server
--   Run `npm run dev` to run the frontend
+-   Run `composer run dev`
 -   Navigate to `http://localhost:8000`
