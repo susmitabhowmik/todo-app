@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TodoController extends Controller
 {
@@ -12,7 +13,9 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Todos/Index', [
+            'todos' => auth() -> user() -> todos() -> latest() -> get(),
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class TodoController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -28,7 +31,13 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        auth()->user()->todos()->create($validated);
+
+        return redirect()->route('todos.index');
     }
 
     /**
@@ -52,7 +61,18 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        //
+        if ($todo->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'completed' => 'sometimes|boolean',
+        ]);
+
+        $todo->update($validated);
+
+        return redirect()->route('todos.index');
     }
 
     /**
@@ -60,6 +80,12 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        //
+        if ($todo->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $todo->delete();
+
+        return redirect()->route('todos.index');
     }
 }
